@@ -5,8 +5,8 @@ threads threads_count, threads_count
 preload_app!
 
 rackup      DefaultRackup
-port        {{ PUMA_PORT }}
-environment {{ RACK_ENV }}
+port        {{ PUMA_PORT | default(9000) }}
+environment "{{ RACK_ENV | default('production') }}"
 
 on_worker_boot do
     # Worker specific setup for Rails 4.1+

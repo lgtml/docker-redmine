@@ -45,7 +45,12 @@ RUN apt-get update && \
   apt-get remove -y libssl-dev libsqlite3-dev libpq-dev libmysqlclient-dev && \
   apt-get clean && apt-get purge && apt-get autoremove -y
 
+# Pre-generate basic sqlite3 db
+RUN cd /opt/redmine && \
+  generate_config.py --template /templates/config/database.yml --dest /opt/redmine/config && \
+  bundle exec rake db:migrate RAILS_ENV="production"
+
 ADD bin/start.sh /usr/bin/start.sh
 RUN chmod +x /usr/bin/start.sh
 
-#ENTRYPOINT [ "/usr/bin/start.sh" ]
+ENTRYPOINT "/usr/bin/start.sh"
